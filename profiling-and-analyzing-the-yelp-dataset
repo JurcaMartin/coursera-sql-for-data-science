@@ -1,0 +1,661 @@
+Data Scientist Role Play: Profiling and Analyzing the Yelp Dataset Coursera Worksheet
+
+This is a 2-part assignment. In the first part, you are asked a series of questions that will help you profile and understand the data just like a data scientist would. For this first part of the assignment, you will be assessed both on the correctness of your findings, as well as the code you used to arrive at your answer. You will be graded on how easy your code is to read, so remember to use proper formatting and comments where necessary.
+
+In the second part of the assignment, you are asked to come up with your own inferences and analysis of the data for a particular research question you want to answer. You will be required to prepare the dataset for the analysis you choose to do. As with the first part, you will be graded, in part, on how easy your code is to read, so use proper formatting and comments to illustrate and communicate your intent as required.
+
+For both parts of this assignment, use this "worksheet." It provides all the questions you are being asked, and your job will be to transfer your answers and SQL coding where indicated into this worksheet so that your peers can review your work. You should be able to use any Text Editor (Windows Notepad, Apple TextEdit, Notepad ++, Sublime Text, etc.) to copy and paste your answers. If you are going to use Word or some other page layout application, just be careful to make sure your answers and code are lined appropriately.
+In this case, you may want to save as a PDF to ensure your formatting remains intact for you reviewer.
+
+
+
+Part 1: Yelp Dataset Profiling and Understanding
+
+1. Profile the data by finding the total number of records for each of the tables below:
+	
+i. Attribute table = 10000
+ii. Business table = 10000
+iii. Category table = 10000
+iv. Checkin table = 10000
+v. elite_years table = 10000
+vi. friend table = 10000
+vii. hours table = 10000
+viii. photo table = 10000
+ix. review table = 10000
+x. tip table = 10000
+xi. user table = 10000
+	
+
+
+2. Find the total distinct records by either the foreign key or primary key for each table. If two foreign keys are listed in the table, please specify which foreign key.
+
+i. Business = business.id (10000)
+ii. Hours = hours.business_id (1562)
+iii. Category = category.business_id (2643)
+iv. Attribute = attribute.business_id (1115)
+v. Review = primary key review.id (10000), foreign key review.business_id (8090), foreign key review.user_id (9581)
+vi. Checkin = checkin.business_id (493)
+vii. Photo = primary key photo.id (10000), foreign key photo.business_id (6493)
+viii. Tip = foreign key tip.business_id (3979), foreign key tip.user_id (537)
+ix. User = user.id (10000)
+x. Friend = friend.user_id (11)
+xi. Elite_years = elite_years.user_id (2780)
+
+Note: Primary Keys are denoted in the ER-Diagram with a yellow key icon.	
+
+
+
+3. Are there any columns with null values in the Users table? Indicate "yes," or "no."
+
+	Answer: No
+	
+	
+	SQL code used to arrive at answer:
+	
+SELECT *
+FROM user
+WHERE
+id IS NULL
+OR name IS NULL
+OR review_count IS NULL
+OR yelping_since IS NULL
+OR useful IS NULL
+OR funny IS NULL
+OR cool IS NULL
+OR fans IS NULL
+OR average_stars IS NULL
+OR compliment_hot IS NULL
+OR compliment_more IS NULL
+OR compliment_profile IS NULL
+OR compliment_cute IS NULL
+OR compliment_list IS NULL
+OR compliment_note IS NULL
+OR compliment_plain IS NULL
+OR compliment_cool IS NULL
+OR compliment_funny IS NULL
+OR compliment_writer IS NULL
+OR compliment_photos IS NULL
+;
+
+	
+
+4. For each table and column listed below, display the smallest (minimum), largest (maximum), and average (mean) value for the following fields:
+
+	i. Table: Review, Column: Stars
+	
+		min: 1		max: 5		avg: 3.7082
+		
+	
+	ii. Table: Business, Column: Stars
+	
+		min: 1		max: 5		avg: 3.6549
+		
+	
+	iii. Table: Tip, Column: Likes
+	
+		min: 0		max: 2		avg: 0.0144
+		
+	
+	iv. Table: Checkin, Column: Count
+	
+		min: 1		max: 53		avg: 1.9414
+		
+	
+	v. Table: User, Column: Review_count
+	
+		min: 0		max: 2000	avg: 24.2995
+		
+
+
+5. List the cities with the most reviews in descending order:
+
+	SQL code used to arrive at answer:
+
+SELECT city
+,SUM(review_count) AS city_reviews
+FROM business
+GROUP BY city
+ORDER BY city_reviews DESC
+;
+
+	
+	Copy and Paste the Result Below:
+	
++-----------------+--------------+
+| city            | city_reviews |
++-----------------+--------------+
+| Las Vegas       |        82854 |
+| Phoenix         |        34503 |
+| Toronto         |        24113 |
+| Scottsdale      |        20614 |
+| Charlotte       |        12523 |
+| Henderson       |        10871 |
+| Tempe           |        10504 |
+| Pittsburgh      |         9798 |
+| Montréal        |         9448 |
+| Chandler        |         8112 |
+| Mesa            |         6875 |
+| Gilbert         |         6380 |
+| Cleveland       |         5593 |
+| Madison         |         5265 |
+| Glendale        |         4406 |
+| Mississauga     |         3814 |
+| Edinburgh       |         2792 |
+| Peoria          |         2624 |
+| North Las Vegas |         2438 |
+| Markham         |         2352 |
+| Champaign       |         2029 |
+| Stuttgart       |         1849 |
+| Surprise        |         1520 |
+| Lakewood        |         1465 |
+| Goodyear        |         1155 |
++-----------------+--------------+
+
+
+	
+6. Find the distribution of star ratings to the business in the following cities:
+
+i. Avon
+
+SQL code used to arrive at answer:
+
+SELECT stars AS star_rating
+,SUM(review_count) AS count
+FROM business
+WHERE city = 'Avon'
+GROUP BY stars
+;
+
+
+Copy and Paste the Resulting Table Below (2 columns – star rating and count):
+
++-------------+-------+
+| star_rating | count |
++-------------+-------+
+|         1.5 |    10 |
+|         2.5 |     6 |
+|         3.5 |    88 |
+|         4.0 |    21 |
+|         4.5 |    31 |
+|         5.0 |     3 |
++-------------+-------+
+
+
+ii. Beachwood
+
+SQL code used to arrive at answer:
+
+SELECT stars AS star_rating
+,SUM(review_count) AS count
+FROM business
+WHERE city = 'Beachwood'
+GROUP BY stars
+;
+
+
+Copy and Paste the Resulting Table Below (2 columns – star rating and count):
+		
++-------------+-------+
+| star_rating | count |
++-------------+-------+
+|         2.0 |     8 |
+|         2.5 |     3 |
+|         3.0 |    11 |
+|         3.5 |     6 |
+|         4.0 |    69 |
+|         4.5 |    17 |
+|         5.0 |    23 |
++-------------+-------+
+
+
+7. Find the top 3 users based on their total number of reviews:
+		
+	SQL code used to arrive at answer:
+	
+SELECT id
+,name
+,review_count
+FROM user
+ORDER BY review_count DESC
+LIMIT 3
+;
+
+		
+	Copy and Paste the Result Below:
+		
++------------------------+--------+--------------+
+| id                     | name   | review_count |
++------------------------+--------+--------------+
+| -G7Zkl1wIWBBmD0KRy_sCw | Gerald |         2000 |
+| -3s52C4zL_DHRK0ULG6qtg | Sara   |         1629 |
+| -8lbUNlXVSoXqaRRiHiSNg | Yuri   |         1339 |
++------------------------+--------+--------------+
+
+
+
+8. Does posing more reviews correlate with more fans?
+
+	Please explain your findings and interpretation of the results:
+
+Yes, there is a strong positive correlation between posting more reviews and having more fans.
+
+Pearson Correlation Coefficient:
+
+r = 0.9724 (25 random rows)
+r = 0.9001 (50 random rows)
+r = 0.8848 (75 random rows)
+r = 0.9104 (100 random rows)
+
+Since SQLite doesn't seem to support CORR function or even SQRT function, I just used select to get random values and then added them to an online calculator (https://www.socscistatistics.com/tests/pearson/default2.aspx) to get a correlation coefficient (r).
+
+SELECT review_count, fans
+FROM user
+ORDER BY RANDOM()
+;
+
+
+
+9. Are there more reviews with the word "love" or with the word "hate" in them?
+
+	Answer:
+
+That depends if you want to count every occurence of the letters love and hate (including relevant words like LOVEly nad HATEd but also irrelevant words like cLOVE and wHATEever) or just "pure" love and hate.
+
+"Pure" hate: 82
+"Pure" love: 1080
+
+Hate (including words like hated, whatever etc.): 232
+Love (including words like lovely, clove etc.): 1780
+
+In either case, love seems to be winning.
+
+
+	SQL code used to arrive at answer:
+
+SELECT text
+FROM review
+WHERE text LIKE '% hate %'
+;
+
+SELECT text
+FROM review
+WHERE text LIKE '%hate%'
+;
+
+SELECT text
+FROM review
+WHERE text LIKE '% love %'
+;
+
+SELECT text
+FROM review
+WHERE text LIKE '%love%'
+;
+
+
+	
+10. Find the top 10 users with the most fans:
+
+	SQL code used to arrive at answer:
+	
+SELECT id
+,name
+,fans
+FROM user
+ORDER BY fans DESC
+LIMIT 10
+;
+
+
+	Copy and Paste the Result Below:
+
++------------------------+-----------+------+
+| id                     | name      | fans |
++------------------------+-----------+------+
+| -9I98YbNQnLdAmcYfb324Q | Amy       |  503 |
+| -8EnCioUmDygAbsYZmTeRQ | Mimi      |  497 |
+| --2vR0DIsmQ6WfcSzKWigw | Harald    |  311 |
+| -G7Zkl1wIWBBmD0KRy_sCw | Gerald    |  253 |
+| -0IiMAZI2SsQ7VmyzJjokQ | Christine |  173 |
+| -g3XIcCb2b-BD0QBCcq2Sw | Lisa      |  159 |
+| -9bbDysuiWeo2VShFJJtcw | Cat       |  133 |
+| -FZBTkAZEXoP7CYvRV2ZwQ | William   |  126 |
+| -9da1xk7zgnnfO1uTVYGkA | Fran      |  124 |
+| -lh59ko3dxChBSZ9U7LfUw | Lissa     |  120 |
++------------------------+-----------+------+
+
+	
+	
+11. Is there a strong relationship (or correlation) between having a high number of fans and being listed as "useful" or "funny?" Out of the top 10 users with the highest number of fans, what percent are also listed as “useful” or “funny”?
+
+Key:
+0% - 25% - Low relationship
+26% - 75% - Medium relationship
+76% - 100% - Strong relationship
+	
+
+	SQL code used to arrive at answer:
+
+SELECT id
+,name
+,fans
+,useful
+,funny
+,funny+useful
+FROM user
+ORDER BY fans DESC
+LIMIT 10
+;
+
+
+	Copy and Paste the Result Below:
+	
++------------------------+-----------+------+--------+--------+--------------+
+| id                     | name      | fans | useful |  funny | funny+useful |
++------------------------+-----------+------+--------+--------+--------------+
+| -9I98YbNQnLdAmcYfb324Q | Amy       |  503 |   3226 |   2554 |         5780 |
+| -8EnCioUmDygAbsYZmTeRQ | Mimi      |  497 |    257 |    138 |          395 |
+| --2vR0DIsmQ6WfcSzKWigw | Harald    |  311 | 122921 | 122419 |       245340 |
+| -G7Zkl1wIWBBmD0KRy_sCw | Gerald    |  253 |  17524 |   2324 |        19848 |
+| -0IiMAZI2SsQ7VmyzJjokQ | Christine |  173 |   4834 |   6646 |        11480 |
+| -g3XIcCb2b-BD0QBCcq2Sw | Lisa      |  159 |     48 |     13 |           61 |
+| -9bbDysuiWeo2VShFJJtcw | Cat       |  133 |   1062 |    672 |         1734 |
+| -FZBTkAZEXoP7CYvRV2ZwQ | William   |  126 |   9363 |   9361 |        18724 |
+| -9da1xk7zgnnfO1uTVYGkA | Fran      |  124 |   9851 |   7606 |        17457 |
+| -lh59ko3dxChBSZ9U7LfUw | Lissa     |  120 |    455 |    150 |          605 |
++------------------------+-----------+------+--------+--------+--------------+
+
+
+	Please explain your findings and interpretation of the results:
+	
+If we analyze only the 10 most popular users, we find out that there is a low relationship between the number of their fans and number of times somebody marked their reviews as funny and/or useful.
+
+Correlation of number of fans with writing useful reviews: 14,08% (low relationship)
+
+Correlation of number of fans with writing funny reviews: 13,58% (low relationship)
+
+Correlation of number of fans with writing funny and useful reviews: 13,86% (low relationship)
+
+All according to the Pearson Correlation Coefficient (* 100 to get the result in percentages).
+
+
+
+Part 2: Inferences and Analysis
+
+1. Pick one city and category of your choice and group the businesses in that city or category by their overall star rating. Compare the businesses with 2-3 stars to the businesses with 4-5 stars and answer the following questions. Include your code.
+
+City = Toronto
+Category = Restaurants
+
+i. Do the two groups you chose to analyze have a different distribution of hours?
+
+Unfortunately, we don't have the data about opening hours in Mama Mia (4 stars) and Naniwa-Taro (4 stars). Therefore we are left with just 6 Toronto restaurants.
+
+There is a moderate negative correlation (r = -0.5056) between the star rating and the total number of hours in a week in which you can visit the restaurant.
+
+There is also a difference in the distribution of opening hours. It seems that restaurants with 2-3 star rating are opening earlier in the morning.
+
++------------------------+------------------+---------+-------+--------------+-------------+-------------------+
+| id                     | name             | city    | stars | review_count | category    | opened_hours_week |
++------------------------+------------------+---------+-------+--------------+-------------+-------------------+
+| -n27mJ_jQWGCuIukTvg9Mg | Cabin Fever      | Toronto |   4.5 |           26 | Restaurants |                62 |
+| 0e-j5VcEn54EZT-FKCUZdw | Sushi Osaka      | Toronto |   4.5 |            8 | Restaurants |                81 |
+| 37kk0IW6jL7ZlxZF6k2QBg | Edulis           | Toronto |   4.0 |           89 | Restaurants |                24 |
+| 0B3W6KxkD3o4W4l6cq735w | Big Smoke Burger | Toronto |   3.0 |           47 | Restaurants |                71 |
+| 1NyHpXJqSLHnvDCOW0nJDg | Pizzaiolo        | Toronto |   3.0 |           34 | Restaurants |               109 |
+| 1nTMWMa6v-eBKkPYA3gxkQ | 99 Cent Sushi    | Toronto |   2.0 |            5 | Restaurants |                84 |
++------------------------+------------------+---------+-------+--------------+-------------+-------------------+
+
+
+ii. Do the two groups you chose to analyze have a different number of reviews?
+    
+Yes, Toronto restaurants with 4-5 stars have received 2.4 times more reviews than restaurants from the same city that only have 2-3 stars.
+
++------------------------------+-------------------+
+| analyzed_groups              | number_of_reviews |
++------------------------------+-------------------+
+| 4_5_star_toronto_restaurant  |               206 |
+| 2_3_star_toronto_restaurants |                86 |
++------------------------------+-------------------+
+
+
+iii. Are you able to infer anything from the location data provided between these two groups? Explain.
+
+Both 99 Cent Sushi (2 stars) and Big Smoke Burger (3 stars) are based in the same neighborhood (Downtown Core), but that's about it.
+
+Maybe if I knew Toronto, I could identify businesses that are located in a good or bad neighborhood. But since I am not familiar with it, I couldn't find anything noteworthy.
+
+
+SQL code used for analysis:
+
+/* Opening hours of the relevant businesses */
+
+SELECT b.id
+,b.name
+,b.city
+,b.stars
+,b.review_count
+,c.category
+,MAX(
+CASE
+WHEN h.hours LIKE 'Monday%'
+THEN TRIM(h.hours,'Monday|')
+END)
+AS monday_hours
+,MAX(
+CASE
+WHEN h.hours LIKE 'Tuesday%'
+THEN TRIM(h.hours,'Tuesday|')
+END)
+AS tuesday_hours
+,MAX(
+CASE
+WHEN h.hours LIKE 'Wednesday%'
+THEN TRIM(h.hours,'Wednesday|')
+END)
+AS wednesday_hours
+,MAX(
+CASE
+WHEN h.hours LIKE 'Thursday%'
+THEN TRIM(h.hours,'Thursday|')
+END)
+AS thursday_hours
+,MAX(
+CASE
+WHEN h.hours LIKE 'Friday%'
+THEN TRIM(h.hours,'Friday|')
+END)
+AS friday_hours
+,MAX(
+CASE
+WHEN h.hours LIKE 'Saturday%'
+THEN TRIM(h.hours,'Saturday|')
+END)
+AS saturday_hours
+,MAX(
+CASE
+WHEN h.hours LIKE 'Sunday%'
+THEN TRIM(h.hours,'Sunday|')
+END)
+AS sunday_hours
+FROM business AS b
+INNER JOIN category AS c
+ON b.id = c.business_id
+INNER JOIN hours AS h
+ON b.id = h.business_id
+WHERE
+c.category = 'Restaurants'
+AND
+b.city = 'Toronto'
+AND
+stars IN (2.0, 2.5, 3.0, 4.0, 4.5, 5.0)
+GROUP BY b.id
+ORDER BY b.stars DESC
+;
+
+
+/* Number of reviews for the 2 different restaurants groups */
+
+SELECT
+CASE
+WHEN stars BETWEEN 2 AND 3 THEN '2_3_star_toronto_restaurants'
+WHEN stars BETWEEN 4 AND 5 THEN '4_5_star_toronto_restaurant'
+ELSE 'irrelevant_data'
+END AS 'analyzed_groups'
+,SUM(review_count) AS number_of_reviews
+FROM business AS b
+INNER JOIN category AS c
+ON b.id = c.business_id
+WHERE
+c.category = 'Restaurants'
+AND
+b.city = 'Toronto'
+AND
+stars IN (2, 2.5, 3, 4, 4.5, 5)
+GROUP BY analyzed_groups
+ORDER BY number_of_reviews DESC
+;
+
+
+/* Trying to find anything interesting in location data */
+
+SELECT *
+FROM business AS b
+INNER JOIN category AS c
+ON b.id = c.business_id
+WHERE
+c.category = 'Restaurants'
+AND
+b.city = 'Toronto'
+AND
+stars IN (2.0, 2.5, 3.0, 4.0, 4.5, 5.0)
+ORDER BY b.stars
+;
+
+		
+		
+2. Group business based on the ones that are open and the ones that are closed. What differences can you find between the ones that are still open and the ones that are closed? List at least two differences and the SQL code you used to arrive at your answer.
+		
+i. Difference 1:
+
+There is (perhaps obviously) a difference in the number of reviews. This is true for both the total number of reviews but also for the average number of reviews per one business. 
+
++---------+-------------------------+----------------------------------------+
+| is_open | total_number_of_reviews | average_number_of_reviews_per_business |
++---------+-------------------------+----------------------------------------+
+|       0 |                   35261 |                          23.1980263158 |
+|       1 |                  269300 |                          31.7570754717 |
++---------+-------------------------+----------------------------------------+
+
+ii. Difference 2:
+         
+The businesses that are still open (8480 vs. 1520) contain more subjects with at least one photograph (368 vs. 57).
+
+This means that 4,43% of open businesses have at least one photo included in this database while the same is true only for 3,75% of closed enterprises.
+
+The difference is even more significant if we look at the total number of photos (585 vs. 66).
+
++---------+------------+---------------+------------------------+---------------------------------------+
+| is_open | businesses | paired_photos | businesses_with_photos | percentage_businesses_with_photograph |
++---------+------------+---------------+------------------------+---------------------------------------+
+|       0 |       1520 |            66 |                     57 |                                     3 |
+|       1 |       8480 |           585 |                    368 |                                     4 |
++---------+------------+---------------+------------------------+---------------------------------------+
+
+
+SQL code used for analysis:
+
+
+/* Open and closed businesses - Total and average number of reviews */
+
+SELECT is_open
+,SUM(review_count) AS total_number_of_reviews
+,AVG(review_count) AS average_number_of_reviews_per_business
+FROM business
+GROUP BY is_open
+;
+
+
+/* Total number of businesses, their total number of photos and number of enterprises with at least one photograph + percentage */
+
+SELECT b.is_open
+,COUNT(DISTINCT b.id) AS businesses
+,COUNT(p.business_id) AS paired_photos
+,COUNT(DISTINCT p.business_id) AS businesses_with_photo
+,COUNT(p.business_id) / COUNT(DISTINCT p.business_id) AS pomer
+,COUNT(p.business_id) * 100 / ( COUNT(b.id) / 100 ) AS i_in_hundreds
+,COUNT(DISTINCT p.business_id)  * 100 / ( COUNT(b.id) / 100 ) AS ii_in_hundreds
+FROM business AS b
+LEFT JOIN photo AS p
+ON b.id = p.business_id
+GROUP BY b.is_open
+;
+
+
+
+3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
+
+Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
+	
+i. Indicate the type of analysis you chose to do:
+         
+I would like to find if there is a correlation between the number of photos that particular business has on their Yelp page and their star rating.
+
+My hypothesis:
+
+A) People are way more likely to capture photos when they are content with the services, so the enterprises with more photos should have better star ratings.
+
+B) The same should be true for business owners that are proud of their good work. They should be more likely to post - therefore more stars.
+
+
+ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
+                           
+We would need star ratings paired with businesses and also the number of photos featured on their Yelp page.
+
+Either we gonna count every business or we randomly select sufficient sample.
+
+
+iii. Output of your finished dataset:
+
++-------+------------------+
+| stars | number_of_photos |
++-------+------------------+
+|   4.0 |                1 |
+|   3.5 |                0 |
+|   3.5 |                0 |
+|   1.5 |                0 |
+|   3.0 |                0 |
+|   4.5 |                0 |
+|   3.5 |                0 |
+|   4.0 |                0 |
+|   3.5 |                0 |
+|   4.0 |                7 |
+|   2.5 |                0 |
+|   4.0 |                0 |
+|   2.5 |                1 |
+|   2.5 |                0 |
+|   4.5 |                0 |
+|   2.0 |                0 |
+|   4.0 |                0 |
+|   3.5 |                0 |
+|   4.5 |                0 |
+|   4.5 |                0 |
+|   2.5 |                0 |
+|   5.0 |                0 |
+|   3.0 |                0 |
+|   2.5 |                0 |
+|   3.0 |                0 |
++-------+------------------+
+(Output limit exceeded, 25 of 10000 total rows shown)
+      
+         
+iv. Provide the SQL code you used to create your final dataset:
+
+SELECT stars
+,COUNT(p.business_id) as number_of_photos
+FROM business AS b
+LEFT JOIN photo AS p
+ON b.id = p.business_id
+GROUP BY b.id
+ORDER BY RANDOM()
+;
